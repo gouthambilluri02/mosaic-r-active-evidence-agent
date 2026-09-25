@@ -11,6 +11,8 @@ license: mit
 
 # MOSAIC-R: Active Evidence Agent
 
+[![Tests and deployment](https://github.com/gouthambilluri02/mosaic-r-active-evidence-agent/actions/workflows/test.yml/badge.svg)](https://github.com/gouthambilluri02/mosaic-r-active-evidence-agent/actions/workflows/test.yml)
+
 MOSAIC-R is a multimodal reliability agent that works with text, images, and
 voice. Instead of forcing an answer when evidence is incomplete or
 contradictory, it chooses one of three actions:
