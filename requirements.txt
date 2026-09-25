@@ -1,0 +1,6 @@
+gradio>=5.20,<6
+pydantic>=2.10,<3
+Pillow>=10.4
+transformers>=4.49,<5
+torch>=2.5
+soundfile>=0.13
