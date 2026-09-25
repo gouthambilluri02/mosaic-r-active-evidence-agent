@@ -2,7 +2,7 @@
 title: MOSAIC-R Active Evidence Agent
 emoji: 🔎
 colorFrom: indigo
-colorTo: cyan
+colorTo: blue
 sdk: static
 app_file: index.html
 pinned: false
