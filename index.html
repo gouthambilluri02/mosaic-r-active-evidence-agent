@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="MOSAIC-R is a privacy-first multimodal agent that knows when it needs more evidence." />
+    <title>MOSAIC-R · Active Evidence Agent</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="MOSAIC-R home">
+        <span class="brand-mark" aria-hidden="true">M</span>
+        <span>MOSAIC-R</span>
+      </a>
+      <nav aria-label="Project links">
+        <a href="#lab">Evidence lab</a>
+        <a href="#architecture">Architecture</a>
+        <a href="https://github.com/gouthambilluri02/mosaic-r-active-evidence-agent" target="_blank" rel="noreferrer">GitHub ↗</a>
+      </nav>
+      <div class="privacy-pill"><span></span> Local inference</div>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="eyebrow">MULTIMODAL RELIABILITY · ACTIVE EVIDENCE</div>
+        <h1>An agent that knows when<br /><em>not</em> to answer.</h1>
+        <p class="hero-copy">
+          MOSAIC-R inspects text, images, and voice, checks whether the sources agree,
+          and either answers, requests the smallest useful evidence, or abstains.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#lab">Open evidence lab</a>
+          <span class="zero-cost">No API key · no uploads · zero-cost hosting</span>
+        </div>
+      </section>
+
+      <section class="agent-strip" id="architecture" aria-label="Agent workflow">
+        <article><span>01</span><strong>Perceive</strong><small>Vision · speech · text</small></article>
+        <i>→</i>
+        <article><span>02</span><strong>Challenge</strong><small>Conflict inspection</small></article>
+        <i>→</i>
+        <article><span>03</span><strong>Judge</strong><small>Reliability scoring</small></article>
+        <i>→</i>
+        <article><span>04</span><strong>Act</strong><small>Answer · ask · abstain</small></article>
+      </section>
+
+      <section class="lab" id="lab">
+        <div class="section-heading">
+          <div><span class="kicker">LIVE DEMO</span><h2>Build an evidence case</h2></div>
+          <p>Use any combination of inputs. The first model run downloads a small quantized model to your browser cache.</p>
+        </div>
+
+        <div class="workspace">
+          <form id="evidence-form" class="input-panel">
+            <div class="panel-label"><span>A</span> Evidence intake</div>
+            <label class="field-label" for="text-evidence">Written claim or decision</label>
+            <textarea id="text-evidence" rows="5" placeholder="Example: The delivered package is damaged, but the delivery photo appears intact."></textarea>
+
+            <div class="file-grid">
+              <label class="drop-zone" for="image-evidence">
+                <input id="image-evidence" type="file" accept="image/png,image/jpeg,image/webp" />
+                <span class="drop-icon">▧</span>
+                <strong>Add image evidence</strong>
+                <small id="image-name">PNG, JPG or WEBP · max 10 MB</small>
+              </label>
+              <label class="drop-zone" for="audio-evidence">
+                <input id="audio-evidence" type="file" accept="audio/*" />
+                <span class="drop-icon">◖</span>
+                <strong>Add voice evidence</strong>
+                <small id="audio-name">MP3, WAV or M4A · max 25 MB</small>
+              </label>
+            </div>
+
+            <button id="analyze-button" class="button primary analyze" type="submit">
+              Run evidence agents <span>→</span>
+            </button>
+            <div class="runtime-status" aria-live="polite">
+              <span class="pulse"></span><span id="model-status">Ready · inference stays on this device</span>
+            </div>
+            <progress id="model-progress" max="100" hidden></progress>
+
+            <div class="scenario-lab">
+              <div class="scenario-title"><span>OR TRY A CONTROLLED CASE</span><span>no model download</span></div>
+              <button type="button" data-scenario="conflict"><strong>Conflict</strong><small>Package sources disagree</small></button>
+              <button type="button" data-scenario="missing"><strong>Missing</strong><small>Receipt is unavailable</small></button>
+              <button type="button" data-scenario="consistent"><strong>Consistent</strong><small>Two sources agree</small></button>
+            </div>
+          </form>
+
+          <section class="output-panel" aria-live="polite">
+            <div class="panel-label"><span>B</span> Agent decision</div>
+            <div id="empty-result" class="empty-result">
+              <div class="radar"><span></span><i></i></div>
+              <h3>Waiting for evidence</h3>
+              <p>Run your inputs or choose a controlled case to see the agent trace.</p>
+            </div>
+
+            <div id="result-panel" hidden>
+              <div class="decision-header">
+                <div><span id="decision-badge" class="decision-badge"></span><h3 id="decision"></h3></div>
+                <div class="confidence"><span>Reliability</span><strong id="confidence"></strong></div>
+              </div>
+              <div class="meter"><span id="confidence-bar"></span></div>
+              <p id="response" class="response"></p>
+
+              <article id="request-card" class="request-card" hidden>
+                <span>NEXT-BEST EVIDENCE</span>
+                <p id="request-text"></p>
+              </article>
+              <ul id="conflicts" class="conflicts"></ul>
+
+              <div class="result-section"><h4>Evidence ledger</h4><div id="ledger" class="ledger"></div></div>
+              <div class="result-section"><h4>Agent trace</h4><ol id="trace" class="trace"></ol></div>
+              <details>
+                <summary>Inspect machine-readable trace</summary>
+                <div class="trace-actions">
+                  <button id="copy-trace" type="button">Copy JSON</button>
+                  <button id="download-trace" type="button">Download</button>
+                </div>
+                <pre id="trace-json"></pre>
+              </details>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="principles">
+        <div><span>WHY IT IS DIFFERENT</span><h2>Reliability is part of the task—not an afterthought.</h2></div>
+        <article><b>01</b><h3>Active acquisition</h3><p>The planner asks for the smallest piece of evidence capable of changing the decision.</p></article>
+        <article><b>02</b><h3>Inspectable policy</h3><p>Every score, conflict, threshold, and action is exposed in a portable JSON trace.</p></article>
+        <article><b>03</b><h3>Private by design</h3><p>Quantized Hugging Face models execute locally with Transformers.js and WASM.</p></article>
+      </section>
+    </main>
+
+    <footer><span>MOSAIC-R · Built by Goutham Billuri</span><span>Portfolio research prototype · not for high-stakes decisions</span></footer>
+    <script type="module" src="./app.mjs"></script>
+  </body>
+</html>
