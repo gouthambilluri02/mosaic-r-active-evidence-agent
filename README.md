@@ -3,8 +3,8 @@ title: MOSAIC-R Active Evidence Agent
 emoji: 🔎
 colorFrom: indigo
 colorTo: cyan
-sdk: gradio
-app_file: app.py
+sdk: static
+app_file: index.html
 pinned: false
 license: mit
 ---
@@ -30,12 +30,14 @@ produce confident answers when a photo is unclear, a voice note conflicts with
 written text, or an extraction tool fails. MOSAIC-R treats evidence quality as
 part of the task.
 
-## Current milestone
+## Live demo
 
-The first milestone implements the explainable decision loop and a public-demo
-interface. Open-source vision and speech adapters are isolated behind a clean
-boundary so model choices can be evaluated and replaced without rewriting the
-agent.
+**Hugging Face Space:** https://huggingface.co/spaces/gouthambilluri02/mosaic-r-active-evidence-agent
+
+The public demo is a static, privacy-first application. Quantized image
+captioning and speech-recognition models execute in the visitor's browser with
+Transformers.js and WASM. Inputs are not uploaded to an application server and
+no API key is required.
 
 ## Agent loop
 
@@ -44,7 +46,30 @@ input -> evidence extraction -> conflict/sufficiency check ->
 answer | request evidence | abstain -> trace + evaluation
 ```
 
+## Architecture
+
+- **Vision agent:** converts image evidence into a grounded caption.
+- **Speech agent:** transcribes voice evidence with Whisper Tiny.
+- **Conflict inspector:** compares claims by topic and polarity.
+- **Reliability judge:** scores confidence and independent modality coverage.
+- **Action planner:** answers, asks for the next-best evidence, or abstains.
+- **Supervisor:** exposes the complete machine-readable decision trace.
+
+The deterministic policy is intentional: agent decisions are reproducible,
+testable, and explainable instead of being hidden inside an LLM prompt.
+
 ## Run locally
+
+Serve the repository with any static web server:
+
+```bash
+python -m http.server 7860
+```
+
+Then open `http://localhost:7860`. The model files are downloaded only when a
+real image or audio input is analyzed; controlled scenarios work immediately.
+
+The original Python reference policy can also be run locally:
 
 ```bash
 python -m venv .venv
@@ -66,17 +91,20 @@ python scripts/evaluate.py
 
 ## Free deployment
 
-The application is designed for a free Hugging Face Gradio Space using CPU
-Basic hardware. No paid API key is required.
+The live application uses a free Hugging Face **Static Space**. GitHub Actions
+runs both policy suites and publishes the repository after tests pass. Add a
+fine-grained Hugging Face write token as the GitHub Actions secret `HF_TOKEN`
+to enable automatic deployment.
 
 ## Technology
 
-- Python
-- Gradio
-- Hugging Face Transformers
+- JavaScript modules
+- Transformers.js + ONNX Runtime Web
+- Web Workers + WASM
 - BLIP image captioning
 - Whisper Tiny speech recognition
-- Pytest evaluation suite
+- Python reference policy
+- Node and Python evaluation suites
 
 ## Roadmap
 
